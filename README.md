@@ -1,5 +1,6 @@
 # myhotelsite
-hotel reservation site with Django
+hotel reservation site with Django 
+for course webdesign in buqaen university
 # install packages
 pip install Django==3.1.4
 pip install django-phonenumber-field[phonenumbers]

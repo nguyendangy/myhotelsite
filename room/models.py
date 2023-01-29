@@ -13,6 +13,13 @@ class Room(models.Model):
         ('Economic', 'Economic'),
 
     )
+
+    ROOM_ADDRESS = (
+        ('Ha Noi','Ha Noi'),
+        ('Da Nang','Da Nang'),
+        ('Ho Chi Minh','Ho Chi Minh'),
+    )
+
     number = models.IntegerField(primary_key=True)
     capacity = models.SmallIntegerField()
     numberOfBeds = models.SmallIntegerField()
@@ -20,9 +27,10 @@ class Room(models.Model):
     price = models.FloatField()
     statusStartDate = models.DateField(null=True)
     statusEndDate = models.DateField(null=True)
+    address = models.CharField(max_length=20, choices=ROOM_ADDRESS)
 
     def __str__(self):
-        return str(self.number)
+        return str(self.number) + " " + str(self.address)
 
 
 class Booking(models.Model):
@@ -34,6 +42,33 @@ class Booking(models.Model):
 
     def numOfDep(self):
         return Dependees.objects.filter(booking=self).count()
+
+    def numOfBooking(self):
+        return Booking.objects.filter(guest=self).count()
+        # return self.bookings_set.filter(guest=self).count()
+
+    def numOfDays(self):
+        totalDay = 0
+        bookings = Booking.objects.filter(guest=self)
+        # bookings = self.bookings_set.filter(guest=self)
+        for b in bookings:
+            day = b.endDate - b.startDate
+            totalDay += int(day.days)
+
+        return totalDay
+
+    def numOfLastBookingDays(self):
+        try:
+            return int((Booking.objects.filter(guest=self).last().endDate - Booking.objects.filter(guest=self).last().startDate).days)
+            # return int((self.bookings_set.filter(guest=self).last().endDate - self.bookings.filter(guest=self).last().startDate).days)
+        except:
+            return 0
+
+    def currentRoom(self):
+        booking = Booking.objects.filter(guest=self).last()
+        # booking = self.bookings.filter(guest=self).last()
+
+        return booking.roomNumber
 
     def __str__(self):
         return str(self.roomNumber) + " " + str(self.guest)

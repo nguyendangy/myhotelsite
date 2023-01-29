@@ -1,0 +1,312 @@
+{% load static %}
+<div class="main-page">
+   <!-- search -->
+   <div class="search-form">
+      <form action="" method="POST">
+         {% csrf_token %}
+         <div class="row">
+
+            <div class="form-group col-3">
+               <label for="example-date-input" class="col-form-label" placeholder="Where are you going?">Place</label>
+               <div class="">
+                  <input class="form-control" type="text" name="place" value="" id="place" required>
+               </div>
+            </div>
+
+            <div class="form-group col-3">
+               <label for="example-date-input" class="col-form-label">First Date</label>
+               <div class="">
+                  <input class="form-control star_date" type="date" name="fd" value="{{fd}}" id="checkin-date" required>
+               </div>
+            </div>
+
+            <div class="form-group col-3">
+               <label for="example-date-input" class="col-form-label">Last Date</label>
+               <div class="">
+                  <input class="form-control end_date" type="date" name="ld" value="{{ld}}" id="checkout-date" required>
+               </div>
+            </div>
+
+            <div class="col-3" style="margin-top:38px;">
+               <button type="submit" name="dateFilter" class="btn btn-warning w-100">Search</button>
+            </div>
+         </div>
+
+      </form>
+   </div>
+   <!-- categories -->
+   <div class="book-categories">
+      <h2>Location Categories</h2>
+      <div class="img-cate-1">
+         <div class="row">
+            <div class="col">
+               <img class="img-row-1" id="brightness" src="{%static '/images/hue.jpg'%}" alt="">
+               <div class="centered img-text">Huế</div>
+            </div>
+            <div class="col">
+               <img class="img-row-1" id="brightness" src="{%static '/images/da-nang.jpg'%}" alt="">
+               <div class="centered img-text">Da Nang</div>
+            </div>
+         </div>
+         <div class="row row-row-2">
+            <div class="col">
+               <img class="img-row-2" id="brightness" src="{%static '/images/hoi-an.jpg'%}" alt="">
+               <div class="centered img-text">Hoi An</div>
+            </div>
+            <div class="col">
+               <img class="img-row-2" id="brightness" src="{%static '/images/ha-noi.jpg'%}" alt="">
+               <div class="centered img-text">Ha Noi</div>
+            </div>
+            <div class="col">
+               <img class="img-row-2" id="brightness" src="{%static '/images/hcm.jpg'%}" alt="">
+               <div class="centered img-text">Ho Chi Minh</div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- Ratting -->
+   <section class="height-rate">
+      <div class="container">
+         <div class="ratting-title">
+            <h2 class="text-black">Stay at our top unique properties</h2>
+         </div>
+
+         <div id="carouselFourColumn" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+               <li data-target="#carouselFourColumn" data-slide-to="0" class="active"></li>
+               <li data-target="#carouselFourColumn" data-slide-to="1"></li>
+               <li data-target="#carouselFourColumn" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+               <div class="carousel-item active">
+                  <div class="row">
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Thai Hoang Hotel</h5>
+                              <p class="card-text">Ha Noi, Viet Nam</p>
+                              <p class="card-text">Starting from 300$</p>
+                              <p class="card-text">Icon Verry good. 1000 reviews</p>
+                              
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Thai Hoang Hotel</h5>
+                              <p class="card-text">Ha Noi, Viet Nam</p>
+                              <p class="card-text">Starting from 300$</p>
+                              <p class="card-text">Icon Verry good. 1000 reviews</p>
+                              
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Thai Hoang Hotel</h5>
+                              <p class="card-text">Ha Noi, Viet Nam</p>
+                              <p class="card-text">Starting from 300$</p>
+                              <p class="card-text">Icon Verry good. 1000 reviews</p>
+                              
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Thai Hoang Hotel</h5>
+                              <p class="card-text">Ha Noi, Viet Nam</p>
+                              <p class="card-text">Starting from 300$</p>
+                              <p class="card-text">Icon Verry good. 1000 reviews</p>
+                              
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="carousel-item">
+                  <div class="row">
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Thai Hoang Hotel</h5>
+                              <p class="card-text">Ha Noi, Viet Nam</p>
+                              <p class="card-text">Starting from 300$</p>
+                              <p class="card-text">Icon Verry good. 1000 reviews</p>
+                              
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Thai Hoang Hotel</h5>
+                              <p class="card-text">Ha Noi, Viet Nam</p>
+                              <p class="card-text">Starting from 300$</p>
+                              <p class="card-text">Icon Verry good. 1000 reviews</p>
+                              
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Thai Hoang Hotel</h5>
+                              <p class="card-text">Ha Noi, Viet Nam</p>
+                              <p class="card-text">Starting from 300$</p>
+                              <p class="card-text">Icon Verry good. 1000 reviews</p>
+                              
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Thai Hoang Hotel</h5>
+                              <p class="card-text">Ha Noi, Viet Nam</p>
+                              <p class="card-text">Starting from 300$</p>
+                              <p class="card-text">Icon Verry good. 1000 reviews</p>
+                              
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="carousel-item">
+                  <div class="row">
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Thai Hoang Hotel</h5>
+                              <p class="card-text">Ha Noi, Viet Nam</p>
+                              <p class="card-text">Starting from 300$</p>
+                              <p class="card-text">Icon Verry good. 1000 reviews</p>
+                              
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Thai Hoang Hotel</h5>
+                              <p class="card-text">Ha Noi, Viet Nam</p>
+                              <p class="card-text">Starting from 300$</p>
+                              <p class="card-text">Icon Verry good. 1000 reviews</p>
+                              
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Thai Hoang Hotel</h5>
+                              <p class="card-text">Ha Noi, Viet Nam</p>
+                              <p class="card-text">Starting from 300$</p>
+                              <p class="card-text">Icon Verry good. 1000 reviews</p>
+                              
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Thai Hoang Hotel</h5>
+                              <p class="card-text">Ha Noi, Viet Nam</p>
+                              <p class="card-text">Starting from 300$</p>
+                              <p class="card-text">Icon Verry good. 1000 reviews</p>
+                              
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselFourColumn" role="button" data-slide="prev">
+               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+               <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselFourColumn" role="button" data-slide="next">
+               <span class="carousel-control-next-icon" aria-hidden="true"></span>
+               <span class="sr-only">Next</span>
+            </a>
+         </div>
+      </div>
+   </section>
+   <!-- Comment -->
+   <!-- <div class="communicate-connect">
+      <p>communicate_connect</p>
+   </div> -->
+   <section class="communicate-connect">
+      <div class="container">
+         <div class="comment-title">
+            <h2 class="text-black">Connect with other travelers</h2>
+         </div>
+
+         <div id="carouselFourColumn" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+               <li data-target="#carouselFourColumn" data-slide-to="0" class="active"></li>
+
+            </ol>
+            <div class="carousel-inner">
+               <div class="carousel-item active">
+                  <div class="row">
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Da Nang</h5>
+                              <p class="card-text">Travel Community</p>
+                              <p class="card-text">111.222 travelers</p>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Da Nang</h5>
+                              <p class="card-text">Travel Community</p>
+                              <p class="card-text">111.222 travelers</p>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Da Nang</h5>
+                              <p class="card-text">Travel Community</p>
+                              <p class="card-text">111.222 travelers</p>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-xl-3 p-1">
+                        <div class="card">
+                           <img src="{%static '/images/hcm.jpg'%}" class="w-100">
+                           <div class="card-body">
+                              <h5 class="card-title">Da Nang</h5>
+                              <p class="card-text">Travel Community</p>
+                              <p class="card-text">111.222 travelers</p>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+         </div>
+      </div>
+   </section>
+</div>

@@ -29,6 +29,12 @@ urlpatterns = [
     path('logout/', logout_user, name="logout"),
     path('register/', register_page, name="register"),
 
+    path('guest-home/<str:pk>', guest_home, name="guest-home"),
+    path('employees-home/<str:pk>', employees_home, name="employees-home"),
+
+    # path('pre-book/', pre_book, name="pre-book"),
+
+
     path('guests/', guests, name="guests"),
     path('employees/', employees, name="employees"),
     path('events/', events, name="events"),

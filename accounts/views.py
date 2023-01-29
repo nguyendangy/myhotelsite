@@ -63,7 +63,7 @@ def add_employee(request):
 
     if request.method == 'POST':
         post = request.POST.copy()  # to make it mutable
-        post['phoneNumber'] = "+90" + post['phoneNumber']
+        post['phoneNumber'] = "+84" + post['phoneNumber']
         request.POST = post
 
         form = CreateUserForm(request.POST)
@@ -95,7 +95,6 @@ def add_employee(request):
         "role": role
     }
     return render(request, path + "add-employee.html", context)
-
 
 def login_page(request):
     if request.user.is_authenticated:

@@ -20,11 +20,65 @@ from .forms import *
 @login_required(login_url='login')
 def home(request):
     role = str(request.user.groups.all()[0])
+    print("role: ",role);
     if role != "guest":
         return redirect("employee-profile", pk=request.user.id)
     else:
-        return redirect("guest-profile", pk=request.user.id)
+        return redirect("guest-home",pk=request.user.id)
 
+@login_required(login_url='login')
+def guest_home(request, pk):
+    tempUser = User.objects.get(id=pk)
+    guest = Guest.objects.get(user=tempUser)
+
+    if request.method == 'POST':
+        tempUser.first_name = request.POST.get("first_name")
+        tempUser.last_name = request.POST.get("last_name")
+        guest.phoneNumber = request.POST.get("phoneNumber")
+        tempUser.save()
+        guest.save()
+        return redirect("home")
+    role = str(request.user.groups.all()[0])
+    path = role + "/"
+
+    eventAttendees = EventAttendees.objects.filter(guest=guest)
+    bookings = Booking.objects.filter(guest=guest)
+    context = {
+        "role": role,
+        "guest": guest,
+        "eventAttendees": eventAttendees,
+        "bookings": bookings
+    }
+    return render(request, path + "guest-home.html", context)
+
+# @login_required(login_url='login')
+# def pre_book(request):
+#     tempUser = User.objects.get()
+#     guest = Guest.objects.get(user=tempUser)
+
+#     if request.method == 'POST':
+#         tempUser.first_name = request.POST.get("first_name")
+#         tempUser.last_name = request.POST.get("last_name")
+#         guest.phoneNumber = request.POST.get("phoneNumber")
+#         tempUser.save()
+#         guest.save()
+#         return redirect("home")
+#     role = str(request.user.groups.all()[0])
+#     path = role + "/"
+
+#     eventAttendees = EventAttendees.objects.filter(guest=guest)
+#     bookings = Booking.objects.filter(guest=guest)
+#     context = {
+#         "role": role,
+#         "guest": guest,
+#         "eventAttendees": eventAttendees,
+#         "bookings": bookings
+#     }
+#     return render(request, path + "guest-home.html", context)
+
+@login_required(login_url='login')
+def employees_home(request):
+    return redirect(request, "employees-home.html")
 
 @login_required(login_url='login')
 def events(request):

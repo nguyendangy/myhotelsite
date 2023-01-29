@@ -26,18 +26,33 @@ def rooms(request):
     rooms = Room.objects.all()
     firstDayStr = None
     lastDateStr = None
+    # tempRoom = Room.objects.get(number=id)
+    # bookingList = Booking.objects.filter(roomNumber=room)
+    # today
+    # startday
+    # endday
+    # neu start day < to day || start day rong hoặc endday rỗng hoặc start > End day 
+    # thì thông báo nhập sai 
+
 
     def chech_availability(fd, ed):
         availableRooms = []
+        
         for room in rooms:
             availList = []
             bookingList = Booking.objects.filter(roomNumber=room)
+            print("bookingList",bookingList)
+            
             if room.statusStartDate == None:
                 for booking in bookingList:
                     if booking.startDate > ed.date() or booking.endDate < fd.date():
                         availList.append(True)
+                        print("th1.1: ngày bd phải bé hơn ngày kết thúc",availList, room.statusStartDate, availableRooms)
+
                     else:
                         availList.append(False)
+                        # availableRooms.append(room)
+                        print("th1.2",availList, room.statusStartDate, availableRooms)
                 if all(availList):
                     availableRooms.append(room)
             else:
@@ -45,12 +60,15 @@ def rooms(request):
                     for booking in bookingList:
                         if booking.startDate > ed.date() or booking.endDate < fd.date():
                             availList.append(True)
+                            print("th2.1",availableRooms, room.statusStartDate, availableRooms)
                         else:
                             availList.append(False)
+                            print("th2.2",availableRooms, room.statusStartDate, availableRooms)
                         if all(availList):
                             availableRooms.append(room)
-
+        print("availableRooms: ",availableRooms)
         return availableRooms
+        
 
     if request.method == "POST":
         if "dateFilter" in request.POST:
@@ -83,6 +101,10 @@ def rooms(request):
                 rooms = rooms.filter(
                     price__lte=request.POST.get("price"))
 
+            if (request.POST.get("address") != ""):
+                rooms = rooms.filter(
+                    address__contains=request.POST.get("address"))
+
             context = {
                 "role": role,
                 "rooms": rooms,
@@ -90,7 +112,8 @@ def rooms(request):
                 "capacity": request.POST.get("capacity"),
                 "nob": request.POST.get("nob"),
                 "price": request.POST.get("price"),
-                "type": request.POST.get("type")
+                "type": request.POST.get("type"),
+                "address": request.POST.get("address")
             }
             return render(request, path + "rooms.html", context)
 
@@ -121,9 +144,10 @@ def add_room(request):
         numberOfBeds = request.POST.get('beds')
         roomType = request.POST.get('type')
         price = request.POST.get('price')
+        address = request.POST.get('address')
         print(capacity)
         room = Room(number=number, capacity=capacity,
-                    numberOfBeds=numberOfBeds, roomType=roomType, price=price)
+                    numberOfBeds=numberOfBeds, roomType=roomType, price=price, address = address)
 
         room.save()
         return redirect('rooms')

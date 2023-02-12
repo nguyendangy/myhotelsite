@@ -4,6 +4,10 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import *
 
+# class addRoom(ModelForm):
+#     class Meta:
+#         model = Room
+#         fields = ["capacity", "numberOfBeds", "roomType", "price", "address"]
 
 class editRoom(ModelForm):
     class Meta:

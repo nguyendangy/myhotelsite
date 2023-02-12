@@ -478,7 +478,7 @@ def payment(request):
             guestName=receiver.user.first_name + " " + receiver.user.last_name, code=code)
 
         # seting up the email
-        message_email = 'hms@support.com'
+        message_email = 'dangysportsman@gmail.com'
         message = email_text
         receiver_name = receiver.user.first_name + " " + receiver.user.last_name
 

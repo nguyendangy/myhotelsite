@@ -16,6 +16,7 @@ from accounts.models import *
 from room.models import *
 from hotel.models import *
 from .forms import *
+from django.core.files.storage import FileSystemStorage
 
 
 
@@ -139,17 +140,43 @@ def add_room(request):
             guest = request.user.employee
 
         # announcement = Announcement(sender = sender, content = request.POST.get('textid'))
+        
+        # room = Room()
+
         number = request.POST.get('number')
         capacity = request.POST.get('capacity')
         numberOfBeds = request.POST.get('beds')
         roomType = request.POST.get('type')
         price = request.POST.get('price')
         address = request.POST.get('address')
-        print(capacity)
-        room = Room(number=number, capacity=capacity,
-                    numberOfBeds=numberOfBeds, roomType=roomType, price=price, address = address)
+        hotel_name = request.POST.get('hotel-name')
+        rate = request.POST.get('rate')
+        room_include = request.POST.get('room-include')
+        price_discount = request.POST.get('price-discount')
+        
+        # if len(request.FILES['images']) != 0:
+        images= request.POST.get('images')
 
+        # print(capacity)
+        room = Room(number=number, capacity=capacity,
+                    numberOfBeds=numberOfBeds, roomType=roomType, price=price, address = address, hotel_name = hotel_name, rate=rate,room_include=room_include,price_discount=price_discount, images=images)
+       
         room.save()
+        # fs=FileSystemStorage()
+        # file_path=fs.save(images.name,images)
+        # room_image=Room_image(room=room,images=file_path)
+        # room_image.save()
+
+        # images = request.POST.get('images')
+
+        # for image in images:
+        #     fs=FileSystemStorage()
+        #     file_path=fs.save(image.name,image)
+        #     room_image=Room_image(room=room,image=file_path)
+        #     room_image.save()
+
+        messages.info(request,'ROOM is saved')
+
         return redirect('rooms')
 
     context = {
@@ -278,7 +305,7 @@ def current_room_services(request):
             counter += 1
         if counter < maxTaskNum:
             availableEmployee.append(e)
-
+    print("availableEmployee: ", availableEmployee)
     context = {
         "role": role,
         "room_services": room_services,
@@ -411,7 +438,11 @@ def booking_make(request):
     role = str(request.user.groups.all()[0])
     path = role + "/"
 
-    room = Room.objects.get(number=request.POST.get("roomid"))
+    # room = Room()
+    # room.number = request.POST.get('roomid')
+    # room.save()
+    numbers=request.POST.get('roomid')
+    room = Room.objects.get(number=numbers)
     guests = Guest.objects.all()  # we pass this to context
     names = []
     if request.method == 'POST':

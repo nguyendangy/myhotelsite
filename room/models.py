@@ -1,9 +1,16 @@
 from django.db import models
 from django.utils import timezone
+from multiselectfield import MultiSelectField
 
 from accounts.models import Guest
 # Create your models here.
 
+def upload_room_images(instance,filename):
+    return "Room/Images/{room}/{filename}/".format(room=instance.room,filename=filename)
+
+
+def upload_cover_image(instance,filename):
+    return "Room/cover/{id}/{filename}/".format(id=instance.id,filename=filename)
 
 class Room(models.Model):
     ROOM_TYPES = (
@@ -20,18 +27,53 @@ class Room(models.Model):
         ('Ho Chi Minh','Ho Chi Minh'),
     )
 
+    ROOM_INCLUDE = (
+        ('Nha tam','Nha tam'),
+        ('Nha bep','Nha bep'),
+        ('Ban an','Ban an'),
+    )
+    
     number = models.IntegerField(primary_key=True)
     capacity = models.SmallIntegerField()
     numberOfBeds = models.SmallIntegerField()
-    roomType = models.CharField(max_length=20, choices=ROOM_TYPES)
+    # roomType = models.CharField(max_length=20, choices=ROOM_TYPES)
+    roomType = models.TextField(max_length=20)
+
     price = models.FloatField()
     statusStartDate = models.DateField(null=True)
     statusEndDate = models.DateField(null=True)
     address = models.CharField(max_length=20, choices=ROOM_ADDRESS)
+    hotel_name = models.CharField(max_length=20, default='hotelname')
+    rate = models.FloatField(default=0.0)
+    # room_include = MultiSelectField(choices=ROOM_INCLUDE,max_choices=3, max_length=20)
+    room_include = models.TextField( max_length=30, default='room_include')
+
+    # images = models.ImageField(upload_to="images", default="none")
+    price_discount = models.FloatField(default=0.0)
+    price_discount_percent = models.FloatField(default=0.0)
+
+    # cover_image = models.ImageField(upload_to =upload_room_images, blank=False )
+    images= models.ImageField(blank=False,upload_to='images/photo/')
+    
+    # def __str__(self):
+    #     return "Room-{id}".format(id=str(self.id))
+
+    # def image_url(self):
+    #         if self.images and hasattr(self.images, 'url'):
+    #             return self.images.url
 
     def __str__(self):
-        return str(self.number) + " " + str(self.address)
+        return str(self.number) 
 
+
+# class Room_image(models.Model):
+#     # room=room=models.ForeignKey(Room,on_delete=models.SET_NULL,null=True,blank=True)
+#     # image=models.ImageField(null=True ,blank=True)
+#     room = models.ForeignKey(Room, on_delete=models.CASCADE ,related_name='room_images')
+#     room_image = models.ImageField(upload_to=upload_room_images,null=False, blank=False)
+  
+    # def __str__(self):
+    #     return str(self.room)
 
 class Booking(models.Model):
     roomNumber = models.ForeignKey(Room, on_delete=models.CASCADE)

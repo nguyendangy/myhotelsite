@@ -123,3 +123,8 @@
     font-size: 15px !important;
     color: rgb(155, 147, 147);
 }
+
+.images-room{
+    height: 150px;
+    width: 150px;
+}

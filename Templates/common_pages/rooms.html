@@ -16,7 +16,7 @@
     <div class="table-header row mt-3 clearfix">
 
         <div class="col-sm-12 col-md-12 col-lg-6 mb-4">
-            <h2>Room List</h2>
+            <h2>Hotel List</h2>
             <span class="text-muted">Filter available room with time interval</span>
         </div>
 
@@ -29,14 +29,16 @@
                     <div class="form-group col-4">
                         <label for="example-date-input" class="col-form-label">First Date</label>
                         <div class="">
-                            <input class="form-control star_date" type="date" name="fd" value="{{fd}}" id="checkin-date" required>
+                            <input class="form-control star_date" type="date" name="fd" value="{{fd}}" id="checkin-date"
+                                required>
                         </div>
                     </div>
 
                     <div class="form-group col-4">
                         <label for="example-date-input" class="col-form-label">Last Date</label>
                         <div class="">
-                            <input class="form-control end_date" type="date" name="ld" value="{{ld}}" id="checkout-date" required>
+                            <input class="form-control end_date" type="date" name="ld" value="{{ld}}" id="checkout-date"
+                                required>
                         </div>
                     </div>
 
@@ -56,6 +58,7 @@
             <tr>
                 <form action="" method="POST">
                     {% csrf_token %}
+                    <th>Images</th>
                     <th>Room Number<input type="number" name="number" value="{{number}}"
                             class="form-control border border-secondary"></th>
                     <th>Capacity<input type="number" name="capacity" value="{{capacity}}"
@@ -68,7 +71,8 @@
                             class="form-control border border-secondary"></th>
                     <th>Address <input type="text" name="address" value="{{address}}"
                             class="form-control border border-secondary"></th>
-                    <th colspan="2"><button type="submit" name="filter" class="btn btn-warning w-100" id="filter">Filter</button>
+                    <th colspan="2"><button type="submit" name="filter" class="btn btn-warning w-100"
+                            id="filter">Filter</button>
                     </th>
                 </form>
 
@@ -79,6 +83,8 @@
         <tbody>
             {% for room in rooms %}
             <tr>
+                {% load static %}
+                <td><img src="/media/images/photo/{{ room.images }}" width="120"></td>
                 <td>{{ room.number }}</td>
                 <td>{{ room.capacity }}</td>
                 <td>{{ room.numberOfBeds }}</td>

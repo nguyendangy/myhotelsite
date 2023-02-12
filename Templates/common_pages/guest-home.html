@@ -1,7 +1,7 @@
 {% load static %}
 <div class="main-page">
    <!-- search -->
-   <div class="search-form">
+   <!-- <div class="search-form">
       <form action="" method="POST">
          {% csrf_token %}
          <div class="row">
@@ -33,7 +33,12 @@
          </div>
 
       </form>
+   </div> -->
+   
+   <div class="col-3 centered" style="margin-top:38px;">
+      <a class="btn btn-warning w-100" href="{% url 'rooms' %}"><strong>Book Now</strong> </a>
    </div>
+
    <!-- categories -->
    <div class="book-categories">
       <h2>Location Categories</h2>

@@ -5,15 +5,23 @@
             <br>
             Between {{fd}} - {{ld}}
             <br>
-            Room Number : {{ room.number }}
+            Hotel name : {{ room.hotel_name }}
+            <br>
+            Room number : {{ room.number }}
             <br>
             Room capacity : {{ room.capacity }}
             <br>
             Number of beds in the room : {{ room.numberOfBeds }}
             <br>
-            Room Type : {{ room.roomType }}
+            Room type : {{ room.roomType }}
             <br>
-            Room price : {{ room.price }}
+            Room include : {{ room.room_include }}
+            <br>
+            {% if room.discount %}
+                Room price : {{ room.discounted_price }}
+            {% else %}
+                Room price : {{ room.price }}
+            {% endif %}
             <br>
             <br>
             Total price : {{total}}
@@ -56,6 +64,9 @@
                 {% endfor %}
             </select>
             {% endif %}
+
+
+            
 
             <button type="submit" class="btn btn-info w-100 mt-3" name="bookGuestButton">Book</button>
         </div>

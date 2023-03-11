@@ -3,6 +3,8 @@ from django.utils import timezone
 from multiselectfield import MultiSelectField
 
 from accounts.models import Guest
+from django.db.models import Avg, Count
+
 # Create your models here.
 
 def upload_room_images(instance,filename):
@@ -28,43 +30,89 @@ class Room(models.Model):
     )
 
     ROOM_INCLUDE = (
-        ('Nha tam','Nha tam'),
-        ('Nha bep','Nha bep'),
-        ('Ban an','Ban an'),
+        ('Breakfast','Breakfast'),
+        ('Bar','Bar'),
+        ('Free WiFi','Free WiFi'),
+        ('Room service','Room service'),
+        ('Private Bathroom','Private Bathroom'),
     )
     
     number = models.IntegerField(primary_key=True)
     capacity = models.SmallIntegerField()
     numberOfBeds = models.SmallIntegerField()
     # roomType = models.CharField(max_length=20, choices=ROOM_TYPES)
-    roomType = models.TextField(max_length=20)
+    roomType = models.TextField(max_length=20,choices=ROOM_TYPES)
 
     price = models.FloatField()
     statusStartDate = models.DateField(null=True)
     statusEndDate = models.DateField(null=True)
     address = models.CharField(max_length=20, choices=ROOM_ADDRESS)
-    hotel_name = models.CharField(max_length=20, default='hotelname')
-    rate = models.FloatField(default=0.0)
+    hotel_name = models.CharField(max_length=20)
+    # rate = models.FloatField(default=0.0)
+    # comment = models.TextField( default='')
     # room_include = MultiSelectField(choices=ROOM_INCLUDE,max_choices=3, max_length=20)
-    room_include = models.TextField( max_length=30, default='room_include')
+    room_include = MultiSelectField( max_length=30, choices=ROOM_INCLUDE,)
 
-    # images = models.ImageField(upload_to="images", default="none")
-    price_discount = models.FloatField(default=0.0)
-    price_discount_percent = models.FloatField(default=0.0)
+    #discount percent
+    discount = models.FloatField(default=0.0)
 
     # cover_image = models.ImageField(upload_to =upload_room_images, blank=False )
-    images= models.ImageField(blank=False,upload_to='images/photo/')
-    
-    # def __str__(self):
-    #     return "Room-{id}".format(id=str(self.id))
+    images = models.ImageField(upload_to='room_images/', blank=True)
 
-    # def image_url(self):
-    #         if self.images and hasattr(self.images, 'url'):
-    #             return self.images.url
+    # def price_discount_percent(seft):
+
+    #     return (seft.price_discount/seft.price) * 100
+    
+    def discounted_price(self):
+        if self.discount:
+            return float(self.price * (100 - self.discount) / 100)
+        else:
+            return self.price
+
+    def average_rating(self):
+        return self.reviews.aggregate(Avg('rate'))['rate__avg']
+
+    def averagereview(self):
+        review = Review.objects.filter(room=self).aggregate(avarage=Avg('rate'))
+        avg=0
+        if review["avarage"] is not None:
+            avg=float(review["avarage"])
+        return avg
+
+
+
+    def countreview(self):
+        reviews = Review.objects.filter(room=self).aggregate(count=Count('id'))
+        cnt=0
+        if reviews["count"] is not None:
+            cnt = int(reviews["count"])
+        return cnt
+    
+    def get_average_rating(self):
+        return self.reviews.aggregate(avg_rating=Avg('rating'))['avg_rating'] or 0.0
+
+    def get_review_count(self):
+        return self.reviews.count()
 
     def __str__(self):
-        return str(self.number) 
+        return str(self.number)
+    
+# class Room_image(models.Model):
+#     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+#     image = models.ImageField(upload_to='room_images/')
+#     image_url = models.CharField(max_length=255, null=True, blank=True)
 
+
+class Review(models.Model):
+    user = models.ForeignKey(Guest, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='reviews')
+    subject = models.CharField(max_length = 100, null=True, blank=True)
+    comment = models.TextField(max_length=250, null=True, blank=True)
+    rate = models.IntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.room) + " " + str(self.comment)+ " " + str(self.user)
 
 # class Room_image(models.Model):
 #     # room=room=models.ForeignKey(Room,on_delete=models.SET_NULL,null=True,blank=True)
@@ -81,6 +129,7 @@ class Booking(models.Model):
     dateOfReservation = models.DateField(default=timezone.now)
     startDate = models.DateField()
     endDate = models.DateField()
+    has_reviewed = models.BooleanField(default=False)
 
     def numOfDep(self):
         return Dependees.objects.filter(booking=self).count()

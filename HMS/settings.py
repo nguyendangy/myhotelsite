@@ -24,10 +24,10 @@ SECRET_KEY = 'on9*bf65je3#4+jphqufropk!s9*i&$*54@_9t8^6+c)iro2&q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
+# ALLOWED_HOSTS = ["*"]
+
 DEBUG = True
-
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'room',
 
     'multiselectfield',
-
 ]
 
 MIDDLEWARE = [
@@ -93,6 +92,19 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'tammybookingdb',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
+
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -135,9 +147,10 @@ STATICFILES_DIRS = [BASE_DIR, "static/"]
 # STATIC_ROOT = [BASE_DIR, "static/"]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = [BASE_DIR, "media"]
-# MEDIA_ROOT = (BASE_DIR, 'data/')
+# MEDIA_ROOT = [BASE_DIR, "media"]
+MEDIA_ROOT = BASE_DIR / 'media'
 
+# MEDIA_ROOT = (BASE_DIR, 'data/')
 # mail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

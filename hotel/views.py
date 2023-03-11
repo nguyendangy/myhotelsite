@@ -20,7 +20,7 @@ from .forms import *
 @login_required(login_url='login')
 def home(request):
     role = str(request.user.groups.all()[0])
-    print("role: ",role);
+    print("role: ", role)
     if role != "guest":
         return redirect("employee-profile", pk=request.user.id)
     else:
@@ -43,11 +43,16 @@ def guest_home(request, pk):
 
     eventAttendees = EventAttendees.objects.filter(guest=guest)
     bookings = Booking.objects.filter(guest=guest)
+    reviews = Review.objects.all()
+    top_rooms = Room.objects.annotate(avg_rate=Avg('reviews__rate')).order_by('-avg_rate')[:4]
+
     context = {
         "role": role,
         "guest": guest,
         "eventAttendees": eventAttendees,
-        "bookings": bookings
+        "bookings": bookings,
+        "reviews": reviews,
+        "top_rooms": top_rooms
     }
     return render(request, path + "guest-home.html", context)
 

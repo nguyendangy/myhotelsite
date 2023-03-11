@@ -1,5 +1,5 @@
-<div class="container clearfix shadow-lg p-5 my-5">
-    <form action="" method="POST"  class="my-5">
+<!-- <div class="container clearfix shadow-lg p-5 my-5">
+    <form action="" method="POST"  enctype="multipart/form-data" class="my-5">
         {% csrf_token %}
 
         <div class="row mt-5">
@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="form-group pt-3">
-                    <label for="item-quantity"><b>Room Include: </b></label>
+                    <label for="item-quantity"><b>Room Utilities: </b></label>
                     <input type="text" class="form-control border border-secondary" id="item-quantity" name="room-include" />
                 </div>
 
@@ -38,24 +38,7 @@
                     <label for="item-type"><b>Import Images: </b></label>
                     <input type="file" accept="image/*" class="form-control border border-secondary" id="item-type" name="images" />
                 </div>
-<!-- 
-                <div class="form-group "  >
-                    <label class="col-md-4 control-label" for="filebutton">image</label>
-                    <div class="col-md-4" id="images">
-                      
-                      
-                      
-                    </div>
-                  </div>
-                  <div class="form-group " >
-                    <label class="col-md-4 control-label" for="filebutton"></label>
-                    <div class="col-md-4">
-                      
-                      <input type="button" value="images" name="add_image">
-                      
-                    </div>
-                  </div>
-                 -->
+
                   
                 <div class="form-group pt-3">
                     <label for="item-type"><b>Capacity: </b></label>
@@ -76,10 +59,6 @@
                 </div>
 
                 <div class="form-group pt-3">
-                    <label for="item-type"><b>Rate: </b></label>
-                    <input type="number" class="form-control border border-secondary" id="item-type" name="rate" />
-                </div>
-                <div class="form-group pt-3">
                     <label for="item-type"><b>Price Discount: </b></label>
                     <input type="number" class="form-control border border-secondary" id="item-type"
                         name="price-discount" />
@@ -91,4 +70,12 @@
         </button>
     </form>
 </div>
-<div class="clearfix my-5 py-1">&nbsp;</div>
+<div class="clearfix my-5 py-1">&nbsp;</div> -->
+
+<form method="POST" class="form-container" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+
+  

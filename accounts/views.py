@@ -10,15 +10,12 @@ from django.contrib.auth.models import Group, User
 from django.contrib import messages
 from hotel.models import Guest
 from datetime import datetime, date, timedelta
-import random
 
 # Own imports
 from accounts.models import *
 from room.models import *
 from hotel.models import *
 from .forms import *
-# Create your views here.
-
 
 def register_page(request):
     form = CreateUserForm()
@@ -37,6 +34,7 @@ def register_page(request):
                 username = form.cleaned_data.get('username')
 
                 group = Group.objects.get(name="guest")
+                print("group:", group)
                 user.groups.add(group)
 
                 curGuest = Guest(

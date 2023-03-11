@@ -1,4 +1,7 @@
 # imports
+import os
+from PIL import Image
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 
@@ -17,7 +20,9 @@ from room.models import *
 from hotel.models import *
 from .forms import *
 from django.core.files.storage import FileSystemStorage
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.core.files.storage import default_storage
 
 
 @ login_required(login_url='login')
@@ -27,14 +32,6 @@ def rooms(request):
     rooms = Room.objects.all()
     firstDayStr = None
     lastDateStr = None
-    # tempRoom = Room.objects.get(number=id)
-    # bookingList = Booking.objects.filter(roomNumber=room)
-    # today
-    # startday
-    # endday
-    # neu start day < to day || start day rong hoặc endday rỗng hoặc start > End day 
-    # thì thông báo nhập sai 
-
 
     def chech_availability(fd, ed):
         availableRooms = []
@@ -48,12 +45,8 @@ def rooms(request):
                 for booking in bookingList:
                     if booking.startDate > ed.date() or booking.endDate < fd.date():
                         availList.append(True)
-                        print("th1.1: ngày bd phải bé hơn ngày kết thúc",availList, room.statusStartDate, availableRooms)
-
                     else:
                         availList.append(False)
-                        # availableRooms.append(room)
-                        print("th1.2",availList, room.statusStartDate, availableRooms)
                 if all(availList):
                     availableRooms.append(room)
             else:
@@ -61,15 +54,11 @@ def rooms(request):
                     for booking in bookingList:
                         if booking.startDate > ed.date() or booking.endDate < fd.date():
                             availList.append(True)
-                            print("th2.1",availableRooms, room.statusStartDate, availableRooms)
                         else:
                             availList.append(False)
-                            print("th2.2",availableRooms, room.statusStartDate, availableRooms)
                         if all(availList):
                             availableRooms.append(room)
-        print("availableRooms: ",availableRooms)
         return availableRooms
-        
 
     if request.method == "POST":
         if "dateFilter" in request.POST:
@@ -126,79 +115,151 @@ def rooms(request):
     }
     return render(request, path + "rooms.html", context)
 
+# @receiver(post_save, sender=Room)
+# def create_room_images(sender, instance, created, **kwargs):
+#     if created:
+#         for image in instance.images.all():
+#             path = default_storage.save('room_images/' + str(image), image)
+#             Room_image.objects.create(room=instance, image=path, image_url=default_storage.url(path))
 
 @login_required(login_url='login')
 def add_room(request):
     role = str(request.user.groups.all()[0])
     path = role + "/"
 
-    if request.method == "POST":
-        guest = None
-        if role == 'guest':
-            guest = request.user.guest
-        elif role == 'manager' or role == 'admin' or role == 'receptionist':
-            guest = request.user.employee
+    # if request.method == "POST":
+    #     guest = None
+    #     if role == 'guest':
+    #         guest = request.user.guest
+    #     elif role == 'manager' or role == 'admin' or role == 'receptionist':
+    #         guest = request.user.employee
 
-        # announcement = Announcement(sender = sender, content = request.POST.get('textid'))
+    #     # announcement = Announcement(sender = sender, content = request.POST.get('textid'))
         
-        # room = Room()
+    #     # room = Room()
 
-        number = request.POST.get('number')
-        capacity = request.POST.get('capacity')
-        numberOfBeds = request.POST.get('beds')
-        roomType = request.POST.get('type')
-        price = request.POST.get('price')
-        address = request.POST.get('address')
-        hotel_name = request.POST.get('hotel-name')
-        rate = request.POST.get('rate')
-        room_include = request.POST.get('room-include')
-        price_discount = request.POST.get('price-discount')
+    #     number = request.POST.get('number')
+    #     capacity = request.POST.get('capacity')
+    #     numberOfBeds = request.POST.get('beds')
+    #     roomType = request.POST.get('type')
+    #     price = request.POST.get('price')
+    #     address = request.POST.get('address')
+    #     hotel_name = request.POST.get('hotel-name')
+    #     room_include = request.POST.get('room-include')
+    #     price_discount = request.POST.get('price-discount')
         
-        # if len(request.FILES['images']) != 0:
-        images= request.POST.get('images')
+    #     # if len(request.FILES['images']) != 0:
+    #     # images = request.POST.get('images')
 
-        # print(capacity)
-        room = Room(number=number, capacity=capacity,
-                    numberOfBeds=numberOfBeds, roomType=roomType, price=price, address = address, hotel_name = hotel_name, rate=rate,room_include=room_include,price_discount=price_discount, images=images)
+    #     # print(capacity)
+    #     room = Room(number=number, capacity=capacity,
+    #                 numberOfBeds=numberOfBeds, roomType=roomType, price=price, address = address, hotel_name = hotel_name,room_include=room_include,price_discount=price_discount)
        
-        room.save()
-        # fs=FileSystemStorage()
-        # file_path=fs.save(images.name,images)
-        # room_image=Room_image(room=room,images=file_path)
-        # room_image.save()
+    #     if request.FILES.getlist('images'):
+    #         images = request.FILES.getlist('images')
+    #         for image in images:
+    #             fs = FileSystemStorage()
+    #             filename = fs.save(image.name, image)
+    #             url = fs.url(filename)
+    #             room_image = Room_image(room=room, image_url=url)
+    #             room_image.save()
 
-        # images = request.POST.get('images')
+    #     room.save()
 
-        # for image in images:
-        #     fs=FileSystemStorage()
-        #     file_path=fs.save(image.name,image)
-        #     room_image=Room_image(room=room,image=file_path)
-        #     room_image.save()
+    #     messages.info(request,'ROOM is saved')
 
-        messages.info(request,'ROOM is saved')
-
-        return redirect('rooms')
+    #     return redirect('rooms')
+   
+    if request.method == 'POST':
+        form = RoomForm(request.POST, request.FILES)
+        if form.is_valid():
+            room = form.save(commit=False)
+            if 'images' in request.FILES:
+                image = request.FILES['images']
+                fs = FileSystemStorage()
+                filename = fs.save(image.name, image)
+                filepath = fs.path(filename)
+                # Resize image if necessary
+                img = Image.open(filepath)
+                if img.height > 1000 or img.width > 1000:
+                    img.thumbnail((1000, 1000))
+                    img.save(filepath)
+                # Set URL of image file in Room model
+                room.images = fs.url(filename)
+            room.save()
+            messages.success(request, 'Room added successfully.')
+            return redirect('rooms')
+    else:
+        form = RoomForm()
 
     context = {
-        "role": role
+        "role": role,
+        "form": form
     }
     return render(request, path + "add-room.html", context)
 
-
 @login_required(login_url='login')
-def room_profile(request, id):
+def my_room(request):
+    import datetime
     role = str(request.user.groups.all()[0])
     path = role + "/"
-    tempRoom = Room.objects.get(number=id)
+    rooms = Room.objects.all()
+    bookings = Booking.objects.all()
+    # calculating total for every booking:
+    totals = {}  # <booking : total>
+    for booking in bookings:
+        start_date = datetime.datetime.strptime(
+            str(booking.startDate), "%Y-%m-%d")
+        end_date = datetime.datetime.strptime(str(booking.endDate), "%Y-%m-%d")
+        numberOfDays = abs((end_date-start_date).days)
+        # get room peice:
+        room = Room.objects.get(number=booking.roomNumber.number)
+        discounted_price = (room.price  * (100 - room.discount) / 100)
+        if room.discount:
+            total = discounted_price * numberOfDays
+        else:
+            total = room.price * numberOfDays
+        totals[booking] = total
+
+    context = {
+        "role": role,
+        'bookings': bookings,
+        'rooms': rooms,
+        'totals': totals
+    }
+    return render(request, path + "my-room.html", context)
+
+
+
+@login_required(login_url='login')
+def room_profile(request, pk):
+    role = str(request.user.groups.all()[0])
+    path = role + "/"
+    user = request.user
+    print("pk: ", pk)
+    tempRoom = Room.objects.get(number=pk)
+    curGuest = Guest.objects.get(user=request.user)
+
     bookings = Booking.objects.filter(roomNumber=tempRoom)
+    bookings3 = Booking.objects.filter(roomNumber=tempRoom,guest=curGuest)
+    print("bookings:", bookings)
+    # print("bookings3 has_reviewed:", bookings3.has_reviewed)
+    review = Review.objects.filter(room=pk)
     guests = Guest.objects.all()
     bookings2 = Booking.objects.all()
+    review2 = Review.objects.all()
+    # form = RatingForm(room = tempRoom)
     context = {
         "role": role,
         "bookings": bookings,
         "room": tempRoom,
         "guests": guests,
-        "bookings2": bookings2
+        "bookings2": bookings2,
+        "review":review,
+        "review2":review2,
+        'average_rating': tempRoom.averagereview(),
+        'review_count': tempRoom.countreview(),
+        # "form": form
     }
 
     if request.method == "POST":
@@ -235,6 +296,43 @@ def room_profile(request, id):
 
     return render(request, path + "room-profile.html", context)
 
+def room_review(request, pk):
+    role = str(request.user.groups.all()[0])
+    path = role + "/"
+
+    guests = Guest.objects.all()
+    curGuest = Guest.objects.get(user=request.user)
+    rooms = Room.objects.get(number=pk)
+    review = Review.objects.filter(room=rooms, user = curGuest).last()
+    reviews = Review.objects.all()
+
+
+    # subject = request.GET.get('subject')
+
+    # nếu đã đánh giá thì cập nhật, còn chưa thì tạo mới
+    if request.method == 'POST':
+        if "ratings" in request.POST:
+            form = RatingForm(request.POST or None)
+            if form.is_valid():
+                new_review = form.save()
+                new_review.room = rooms
+                new_review.user = curGuest
+                if review:
+                    review.delete()  # delete previous review
+                new_review.save()
+                return redirect('room-profile',pk=rooms.number)
+    else:
+        form = RatingForm(instance=review)
+    context = {
+        "role": role,
+        "guests": guests,
+        "curGuest": curGuest,
+        "rooms":rooms,
+        "review":review,
+        "reviews":reviews,
+        "form": form
+    }
+    return render(request, path + "room-review.html", context) 
 
 @login_required(login_url='login')
 def room_edit(request, pk):
@@ -242,19 +340,51 @@ def room_edit(request, pk):
     path = role + "/"
 
     room = Room.objects.get(number=pk)
-    form1 = editRoom(instance=room)
+    old_image_path = str(room.images)
+    print("old_image_path:" , old_image_path)
+    # form1 = editRoom(instance=room)
+    # form = editRoom(request.POST or None, request.FILES or None, instance=room)
+   
+    # if form.is_valid():
+    #     form.save()
+    #     return redirect("room-profile", id=room.number)
+    if request.method == 'POST':
+        form = editRoom(request.POST, request.FILES, instance=room)
+        if form.is_valid():
+            room = form.save(commit=False)
+            if 'images' in request.FILES:
+                # Delete old image
+                # if room.images:
+                    # fs = FileSystemStorage()
+                    # if fs.exists(room.images.name):
+                    #     fs.delete(room.images.name)
 
+                # Save new image
+                image = request.FILES['images']
+                fs = FileSystemStorage()
+                filename = fs.save(image.name, image)
+                filepath = fs.path(filename)
+
+                # Resize image if necessary
+                img = Image.open(filepath)
+                if img.height > 1000 or img.width > 1000:
+                    img.thumbnail((1000, 1000))
+                    img.save(filepath)
+
+                # Update Room object with new image URL
+                room.images = fs.url(filename)
+
+            # Save updated Room object to database
+            room.save()
+            messages.success(request, 'Room updated successfully.')
+            return redirect('rooms')
+    else:
+        form = editRoom(instance=room)
     context = {
         "role": role,
         "room": room,
-        "form1": form1
+        "form": form
     }
-
-    if request.method == 'POST':
-        form1 = editRoom(request.POST, instance=room)
-        if form1.is_valid():
-            form1.save()
-            return redirect("room-profile", id=room.number)
     return render(request, path + "room-edit.html", context)
 
 
@@ -381,8 +511,12 @@ def bookings(request):
         end_date = datetime.datetime.strptime(str(booking.endDate), "%Y-%m-%d")
         numberOfDays = abs((end_date-start_date).days)
         # get room peice:
-        price = Room.objects.get(number=booking.roomNumber.number).price
-        total = price * numberOfDays
+        room = Room.objects.get(number=booking.roomNumber.number)
+        discounted_price = (room.price  * (100 - room.discount) / 100)
+        if room.discount:
+            total = discounted_price * numberOfDays
+        else:
+            total = room.price * numberOfDays
         totals[booking] = total
 
     if request.method == "POST":
@@ -447,6 +581,7 @@ def booking_make(request):
     names = []
     if request.method == 'POST':
         if request.POST.get("fd") == "" or request.POST.get("ld") == "":
+            messages.warning(request, "You must choose date!")
             return redirect("rooms")
 
         start_date = datetime.strptime(
@@ -455,8 +590,11 @@ def booking_make(request):
             str(request.POST.get("ld")), "%Y-%m-%d")
         numberOfDays = abs((end_date-start_date).days)
         # get room peice:
-        price = room.price
-        total = price * numberOfDays
+        discounted_price = (room.price  * (100 - room.discount) / 100)
+        if room.discount:
+            total = discounted_price * numberOfDays
+        else:
+            total = room.price * numberOfDays
 
         if 'add' in request.POST:  # add dependee
             name = request.POST.get("depName")
@@ -473,6 +611,7 @@ def booking_make(request):
                 curguest = request.user.guest
             curbooking = Booking(guest=curguest, roomNumber=room, startDate=request.POST.get(
                 "fd"), endDate=request.POST.get("ld"))
+            curbooking.has_reviewed = True
             curbooking.save()
 
             for i in range(room.capacity-1):

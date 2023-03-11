@@ -84,7 +84,7 @@
             {% for room in rooms %}
             <tr>
                 {% load static %}
-                <td><img src="/media/images/photo/{{ room.images }}" width="120"></td>
+                <td><img src="{{ room.images }}" width="120"></td>
                 <td>{{ room.number }}</td>
                 <td>{{ room.capacity }}</td>
                 <td>{{ room.numberOfBeds }}</td>

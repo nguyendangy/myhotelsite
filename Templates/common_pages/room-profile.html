@@ -1,3 +1,4 @@
+{% load static %}
 <div class="container">
     <div class="shadow-lg p-5">
 
@@ -31,10 +32,53 @@
                     <span class="font-weight-normal">{{room.capacity}}</span>
 
                 </div>
+                <div class="p-2 h4">
+                    <span>Room Utilities: </span>
+                    <span class="font-weight-normal">{{room.room_include}}</span>
+
+                </div>
+                <div class="p-2 h4">
+                    <span>Average Rating: </span>
+                    <span class="font-weight-normal"> {{ average_rating }} - ({{ review_count }} reviews)</span>
+
+                </div>
+                <div class="p-2 h4">
+                    <span>Rating List: </span>
+
+                    <div class="font-weight-normal">
+                        {% for reviews in review %}
+                        <p>Review name: {{ reviews.user }}</p>
+                        <p>Comment: {{ reviews.comment }}</p>
+                        <p>Rating: {{ reviews.rate }}</p>
+                        {% empty %}
+                        <p>No reviews yet.</p>
+                        {% endfor %}
+                    </div>
+                    
+                </div>
+                
+                {% if role == 'guest' and bookings3.has_reviewed == True %} 
+                {% if review.user.user.id == user.id and review.rate == None %}
+                <a href="{% url 'room-review' room.number %}" class="btn btn-primary">Write review</a>
+                {% else %}
+                <a href="{% url 'room-review' room.number %}" class="btn btn-primary">Update review</a>
+                {% endif %}
+                {% else %}
+                chua co dat phong nen k co hien thi danh gia
+                {% endif %}
+
+                
 
             </div>
 
             <div class="col-6">
+                {% if role == 'guest' %} 
+                
+                <div class="p-2 h4">
+                    <img src="{{ room.images }}" alt="" width="400"></td>
+                </div>
+                
+                {% endif %}
 
 
 
@@ -75,13 +119,13 @@
                 </div>
                 {% endif %}
                 <br>
-
+                
 
 
             </div>
         </div>
         <br>
-
+        {% if role != 'guest' %}
         <div class="table-responsive table-striped my-5">
             <div class="table-header row">
 
@@ -116,6 +160,7 @@
             </table>
 
         </div>
+        {% endif %}
 
     </div>
 </div>

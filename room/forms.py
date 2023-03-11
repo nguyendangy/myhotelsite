@@ -4,15 +4,28 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import *
 
-# class addRoom(ModelForm):
-#     class Meta:
-#         model = Room
-#         fields = ["capacity", "numberOfBeds", "roomType", "price", "address"]
+class RatingForm(forms.ModelForm):
+    rate = forms.IntegerField()
+    class Meta:
+        model = Review
+        fields = (
+            "rate", "comment"
+        )
 
+    def save(self):
+        review = super().save(commit=False)
+        return review
+
+class RoomForm(forms.ModelForm):
+    class Meta:
+        model = Room
+        fields = ['hotel_name','number', 'address',  'room_include', 'images', 'capacity', 'numberOfBeds', 'roomType', 'price', 'discount']
+
+    
 class editRoom(ModelForm):
     class Meta:
         model = Room
-        fields = ["capacity", "numberOfBeds", "roomType", "price"]
+        fields = ['hotel_name','number', 'address',  'room_include', 'images', 'capacity', 'numberOfBeds', 'roomType', 'price', 'discount']
 
 
 class editBooking(ModelForm):

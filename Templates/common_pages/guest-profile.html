@@ -53,6 +53,17 @@
                     {% endif %}
                 </div>
 
+                <!-- <div class="p-2 h4">
+                    <span>Password: </span>
+                    {% if guest.user.id != request.user.id %}
+
+                    <span class="font-weight-normal">{{guest.user.password}}</span>
+                    {% else %}
+                    <input type="text" class="form-control border border-secondary" id="id_password"
+                        value="{{guest.user.password}}" name="password">
+                    {% endif %}
+                </div> -->
+
                 <br>
                 {% if guest.user.id == request.user.id %}
                 <button type="submit" name="submit" class="btn btn-success float-right">Save Changes</button>

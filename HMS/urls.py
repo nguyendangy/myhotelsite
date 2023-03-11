@@ -21,6 +21,7 @@ from accounts.views import *
 from room.views import *
 from hotel.views import *
 from django.conf.urls.static import static 
+from django.conf import settings
 
 
 urlpatterns = [
@@ -35,6 +36,8 @@ urlpatterns = [
     path('employees-home/<str:pk>', employees_home, name="employees-home"),
 
     # path('pre-book/', pre_book, name="pre-book"),
+    path('room-review/<str:pk>', room_review, name='room-review'),
+
 
 
     path('guests/', guests, name="guests"),
@@ -42,6 +45,7 @@ urlpatterns = [
     path('events/', events, name="events"),
     path('bookings/', bookings, name="bookings"),
     path('rooms/', rooms, name="rooms"),
+    path('my-room/', my_room, name="my-room"),
     path('room-services/', room_services, name="room-services"),
     path('announcements/', announcements, name="announcements"),
     path('refunds/', refunds, name="refunds"),
@@ -61,7 +65,7 @@ urlpatterns = [
 
     path('guest-edit/<str:pk>', guest_edit, name="guest-edit"),
     path('guest-profile/<str:pk>', guest_profile, name="guest-profile"),
-    path('room-profile/<str:id>/', room_profile, name="room-profile"),
+    path('room-profile/<str:pk>/', room_profile, name="room-profile"),
     path('room-edit/<str:pk>/', room_edit, name="room-edit"),
     path('error/', error, name="error"),
 
@@ -83,5 +87,5 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-        urlpatterns += static(settings.MEDIA_URL,
-                              document_root=settings.MEDIA_ROOT)
+ urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -46,6 +46,7 @@ urlpatterns = [
     path('bookings/', bookings, name="bookings"),
     path('rooms/', rooms, name="rooms"),
     path('my-room/', my_room, name="my-room"),
+    path('hotel-policy/', hotel_policy, name="hotel-policy"),
     path('room-services/', room_services, name="room-services"),
     path('announcements/', announcements, name="announcements"),
     path('refunds/', refunds, name="refunds"),

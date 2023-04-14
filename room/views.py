@@ -229,7 +229,14 @@ def my_room(request):
     }
     return render(request, path + "my-room.html", context)
 
-
+@login_required(login_url='login')
+def hotel_policy(request):
+    role = str(request.user.groups.all()[0])
+    path = role + "/"
+    context = {
+        "role": role
+    }
+    return render(request, path +  "hotel-policy.html", context)
 
 @login_required(login_url='login')
 def room_profile(request, pk):
@@ -242,21 +249,23 @@ def room_profile(request, pk):
 
     bookings = Booking.objects.filter(roomNumber=tempRoom)
     bookings3 = Booking.objects.filter(roomNumber=tempRoom,guest=curGuest)
-    print("bookings:", bookings)
-    # print("bookings3 has_reviewed:", bookings3.has_reviewed)
-    review = Review.objects.filter(room=pk)
+    print("bookings3:", bookings3)
+    if (bookings3):
+        is_reviewed = True
+    else: 
+        is_reviewed = False
+    review = Review.objects.filter(room=tempRoom,user=curGuest,booking=bookings3)
+    review_all_user_in_room = Review.objects.filter(room=tempRoom)
     guests = Guest.objects.all()
-    bookings2 = Booking.objects.all()
-    review2 = Review.objects.all()
-    # form = RatingForm(room = tempRoom)
     context = {
+        "is_reviewed": is_reviewed,
         "role": role,
         "bookings": bookings,
         "room": tempRoom,
         "guests": guests,
-        "bookings2": bookings2,
+        "bookings3": bookings3,
         "review":review,
-        "review2":review2,
+        "reviewalluser":review_all_user_in_room,
         'average_rating': tempRoom.averagereview(),
         'review_count': tempRoom.countreview(),
         # "form": form
@@ -459,6 +468,22 @@ def current_room_services(request):
             else:
                 newTask = Task(employee=chosenEmp, startTime=datetime.datetime.now(),
                                endTime=datetime.datetime.now()+datetime.timedelta(minutes=30), description="Food Request")
+            newTask.save()
+            return redirect("current-room-services")
+        
+        if "drinkReq" in request.POST:
+            newServiceReq = RoomServices(
+                curBooking=curBooking, price=50.0, room=curRoom,  servicesType='Drink')
+            newServiceReq.save()
+
+            chosenEmp = random.choice(availableEmployee)
+            lastTask = Task.objects.filter(employee=chosenEmp).last()
+            if(lastTask != None):
+                newTask = Task(employee=chosenEmp, startTime=lastTask.endTime,
+                               endTime=lastTask.endTime+datetime.timedelta(minutes=30), description="Drink Request")
+            else:
+                newTask = Task(employee=chosenEmp, startTime=datetime.datetime.now(),
+                               endTime=datetime.datetime.now()+datetime.timedelta(minutes=30), description="Drink Request")
             newTask.save()
             return redirect("current-room-services")
 
@@ -675,7 +700,7 @@ def refunds(request):
 
             def send(request, receiver, text, subject):
 
-                message_email = 'hms@support.com'
+                message_email = 'bong15042021@gmail.com'
                 message = text
                 receiver_name = receiver.user.first_name + " " + receiver.user.last_name
 

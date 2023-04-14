@@ -65,7 +65,7 @@ ROOT_URLCONF = 'HMS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR, "templates"],
+        'DIRS': [BASE_DIR, "Templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -156,5 +156,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'dangysportsman@gmail.com'
-EMAIL_HOST_PASSWORD = 'dqjiclstivkqwjry'
+EMAIL_HOST_USER = 'bong15042021@gmail.com'
+EMAIL_HOST_PASSWORD = 'ktaweckjlpcbwwng'
+# can sua lai host user

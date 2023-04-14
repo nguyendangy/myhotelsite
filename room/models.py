@@ -103,25 +103,7 @@ class Room(models.Model):
 #     image_url = models.CharField(max_length=255, null=True, blank=True)
 
 
-class Review(models.Model):
-    user = models.ForeignKey(Guest, on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='reviews')
-    subject = models.CharField(max_length = 100, null=True, blank=True)
-    comment = models.TextField(max_length=250, null=True, blank=True)
-    rate = models.IntegerField(default=1)
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return str(self.room) + " " + str(self.comment)+ " " + str(self.user)
-
-# class Room_image(models.Model):
-#     # room=room=models.ForeignKey(Room,on_delete=models.SET_NULL,null=True,blank=True)
-#     # image=models.ImageField(null=True ,blank=True)
-#     room = models.ForeignKey(Room, on_delete=models.CASCADE ,related_name='room_images')
-#     room_image = models.ImageField(upload_to=upload_room_images,null=False, blank=False)
-  
-    # def __str__(self):
-    #     return str(self.room)
 
 class Booking(models.Model):
     roomNumber = models.ForeignKey(Room, on_delete=models.CASCADE)
@@ -185,6 +167,7 @@ class Refund(models.Model):
 class RoomServices(models.Model):
     SERVICES_TYPES = (
         ('Food', 'Food'),
+        ('Drink', 'Drink'),
         ('Cleaning', 'Cleaning'),
         ('Technical', 'Technical'),
     )
@@ -198,3 +181,25 @@ class RoomServices(models.Model):
 
     def str(self):
         return str(self.curBooking) + " " + str(self.room) + " " + str(self.servicesType)
+    
+class Review(models.Model):
+    user = models.ForeignKey(Guest, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='reviews')
+    booking = models.ForeignKey(Booking, null=True, on_delete=models.CASCADE)
+
+    subject = models.CharField(max_length = 100, null=True, blank=True)
+    comment = models.TextField(max_length=250, null=True, blank=True)
+    rate = models.IntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.room) + " " + str(self.comment)+ " " + str(self.user)+ " " + str(self.booking)
+
+# class Room_image(models.Model):
+#     # room=room=models.ForeignKey(Room,on_delete=models.SET_NULL,null=True,blank=True)
+#     # image=models.ImageField(null=True ,blank=True)
+#     room = models.ForeignKey(Room, on_delete=models.CASCADE ,related_name='room_images')
+#     room_image = models.ImageField(upload_to=upload_room_images,null=False, blank=False)
+  
+    # def __str__(self):
+    #     return str(self.room)

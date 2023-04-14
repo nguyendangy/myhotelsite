@@ -46,10 +46,11 @@
                     <span>Rating List: </span>
 
                     <div class="font-weight-normal">
-                        {% for reviews in review %}
+                        {% for reviews in reviewalluser %}
                         <p>Review name: {{ reviews.user }}</p>
                         <p>Comment: {{ reviews.comment }}</p>
                         <p>Rating: {{ reviews.rate }}</p>
+                        <hr>
                         {% empty %}
                         <p>No reviews yet.</p>
                         {% endfor %}
@@ -57,14 +58,8 @@
                     
                 </div>
                 
-                {% if role == 'guest' and bookings3.has_reviewed == True %} 
-                {% if review.user.user.id == user.id and review.rate == None %}
-                <a href="{% url 'room-review' room.number %}" class="btn btn-primary">Write review</a>
-                {% else %}
-                <a href="{% url 'room-review' room.number %}" class="btn btn-primary">Update review</a>
-                {% endif %}
-                {% else %}
-                chua co dat phong nen k co hien thi danh gia
+                {% if role == 'guest'%} 
+                    <a href="{% url 'room-review' room.number %}" class="btn btn-primary">Review</a>                      
                 {% endif %}
 
                 

@@ -61,7 +61,9 @@ def add_employee(request):
 
     if request.method == 'POST':
         post = request.POST.copy()  # to make it mutable
-        post['phoneNumber'] = "+84" + post['phoneNumber']
+        # post['phoneNumber'] = "+84" + post['phoneNumber']
+        post['phoneNumber'] =  post['phoneNumber']
+
         request.POST = post
 
         form = CreateUserForm(request.POST)
@@ -78,7 +80,11 @@ def add_employee(request):
 
             role = form2.cleaned_data.get("ROLES_TYPES")
 
+            print("role",role)
+
             group = Group.objects.get(name=role)
+            print("group",group)
+
             user.groups.add(group)
 
             messages.success(
